@@ -1,13 +1,15 @@
 package com.digitality.repository;
 
-import java.util.List;
-
+import com.digitality.dto.ProfanityDTO;
+import com.digitality.model.Profanity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import com.digitality.model.ProfanityGroup;
+import java.util.List;
 
-public interface ProfanityRepository extends MongoRepository<ProfanityGroup, String>{
-	@Query(value = "{}", fields = "{ 'profanities': 1 }")
-	List<ProfanityOnly> findAllProfanities();
+@Repository
+public interface ProfanityRepository extends MongoRepository<Profanity,String> {
+    @Query(value = "{}", fields = "{ '_id': 0 }")
+    List<ProfanityDTO> findAllProfanities();
 }

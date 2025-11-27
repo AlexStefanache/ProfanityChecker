@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ProfanityServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProfanityServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProfanityServiceApplication.class, args);
+    }
 
 }
