@@ -3,7 +3,6 @@ version: "3.9"
 services:
   userservice-db:
     image: mysql:8.0
-    container_name: userservice-db
     environment:
       MYSQL_ROOT_PASSWORD: userservice
       MYSQL_DATABASE: user_service
@@ -18,11 +17,12 @@ services:
       interval: 5s
       retries: 10
       timeout: 5s
+    networks:
+      - net-user
 
   userservice:
     build:
       context: ./user-service
-    container_name: userservice
     depends_on:
       userservice-db:
         condition: service_healthy
@@ -32,6 +32,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: userservicepassword
     ports:
       - "8081:8080"
+    networks:
+      - net-user
 
 volumes:
   userservice-db-data:
+
+networks:
+  net-user:
