@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  eurekaserver:
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - net-eureka
+  
   userservice-db:
     image: mysql:8.0
     environment:
@@ -8,8 +16,6 @@ services:
       MYSQL_DATABASE: user_service
       MYSQL_USER: userservice
       MYSQL_PASSWORD: userservicepassword
-    ports:
-      - "3306:3306"
     volumes:
       - userservice-db-data:/var/lib/mysql
     healthcheck:
@@ -25,18 +31,56 @@ services:
       context: ./user-service
     depends_on:
       userservice-db:
-        condition: service_healthy
+          condition: service_healthy
+      eurekaserver:
+        condition: "service_started"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://userservice-db:3306/user_service
       SPRING_DATASOURCE_USERNAME: userservice
       SPRING_DATASOURCE_PASSWORD: userservicepassword
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
     ports:
       - "8081:8080"
     networks:
       - net-user
+      - net-eureka
+  
+  profanityservice-db:
+    image: mongo:6.0
+    volumes:
+      - profanityservice-db-data:/data/db
+      - ./mongo/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
+    networks:
+      - net-profanity
+    
+  profanityservice:
+    build:
+      context: ./profanity-service
+    depends_on:
+      profanityservice-db:
+        condition: service_healthy
+      eurekaserver:
+        condition: "service_started"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
+      SPRING_DATA_MONGODB_URI: mongodb://profanityservice-db:27017/profanity_db
+    ports:
+      - "8082:8080"
+    networks:
+      - net-profanity
+      - net-eureka
+    
 
 volumes:
   userservice-db-data:
+  profanityservice-db-data:
 
 networks:
   net-user:
+  net-profanity:
+  net-eureka:
