@@ -25,8 +25,8 @@ public class ProfanityServiceImpl implements ProfanityService{
 
     @Override
     public Boolean checkProfanity(String message){
-        HashSet<String> words = new HashSet<String>(Arrays.asList(message.split(regex)));
-        HashSet<String> profanities = new  HashSet<String>(getAllProfanities());
+        HashSet<String> words = new HashSet<String>(Arrays.stream(message.split(regex)).map(String::toLowerCase).toList());
+        HashSet<String> profanities = new  HashSet<String>(getAllProfanities().stream().map(String::toLowerCase).toList());
         words.retainAll(profanities);
         return !words.isEmpty();
     }
