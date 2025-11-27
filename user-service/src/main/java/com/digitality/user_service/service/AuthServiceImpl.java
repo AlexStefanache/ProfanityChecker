@@ -20,14 +20,14 @@ public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
 	@Override
 	public AuthResponseDTO authenticate(AuthRequestDTO request) {
-		boolean isValid = false;
+		boolean valid = false;
 		Optional<User> optUser = userRepository.findByEmail(request.getEmail());
 		if (optUser.isPresent()) {
 			if (passwordEncoder.matches(request.getPassword(), optUser.get().getPassword())) {
-				isValid = true;
+				valid = true;
 			}
 		}
-		return AuthResponseDTO.builder().isValid(isValid).build();
+		return AuthResponseDTO.builder().valid(valid).build();
 	}
 
 }

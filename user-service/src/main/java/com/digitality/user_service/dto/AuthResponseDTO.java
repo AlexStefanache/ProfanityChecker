@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthResponseDTO {
 
-	public boolean isValid;
+	public boolean valid;
 }
