@@ -6,6 +6,11 @@ db.profanity.insertOne({
     "merda",
     "coglione",
     "stronzo",
-    "bastardo"
+    "bastardo",
+    "troia",
+    "puttana",
+    "vaffanculo",
+    "culo",
+    "fanculo"
   ]
 });
