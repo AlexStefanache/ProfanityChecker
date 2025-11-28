@@ -9,6 +9,23 @@ services:
     networks:
       - net-eureka
   
+  aggregator:
+    build:
+      context: ./aggregator
+    depends_on:
+      eurekaserver:
+        condition: "service_started"
+      userservice:
+        condition: "service_started"
+      profanityservice:
+        condition: "service_started"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka
+    ports:
+      - "8080:8080"
+    networks:
+      - net-eureka
+  
   userservice-db:
     image: mysql:8.0
     environment:
