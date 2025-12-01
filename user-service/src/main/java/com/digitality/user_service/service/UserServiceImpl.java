@@ -1,5 +1,6 @@
 package com.digitality.user_service.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.digitality.user_service.dto.UserRequestDTO;
@@ -9,7 +10,7 @@ import com.digitality.user_service.entity.User;
 import com.digitality.user_service.exception.UserNotFoundException;
 import com.digitality.user_service.mapper.UserMapper;
 import com.digitality.user_service.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService{
 
 	private final UserRepository userRepository;
-	private final UserMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
+	private final UserMapper userMapper;
 	
 	@Override
 	public UserResponseDTO getUser(Long userId) {
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService{
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new UserNotFoundException(userId));
 		
-		user = userMapper.toUpdate(user, update);
+		userMapper.toUpdate(update, user);
 		
 		if (update.getPassword() != null) {
 			user.setPassword(passwordEncoder.encode(update.getPassword()));
