@@ -1,24 +1,23 @@
 package com.digitality.service;
 
-import com.digitality.client.AuthClient;
 import com.digitality.client.ProfanityClient;
+import com.digitality.client.UserClient;
 import com.digitality.dto.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProfanityServiceImpl implements ProfanityService{
-    private AuthClient authClient;
+    private UserClient userClient;
     private ProfanityClient profanityClient;
-    public ProfanityServiceImpl(AuthClient authClient, ProfanityClient profanityClient) {
-        this.authClient = authClient;
+    public ProfanityServiceImpl(UserClient userClient, ProfanityClient profanityClient) {
+        this.userClient = userClient;
         this.profanityClient = profanityClient;
     }
 
     @Override
     public ProfanityResponseDTO checkProfanity(ProfanityRequestDTO profanityRequestDTO) {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(profanityRequestDTO.getEmail(), profanityRequestDTO.getPassword());
-        AuthResponseDTO authResponseDTO = authClient.authenticate(authRequestDTO);
+        AuthResponseDTO authResponseDTO = userClient.authenticate(authRequestDTO);
         boolean userExists = authResponseDTO.isValid();
         if(userExists){
             MessageDTO messageDTO = new MessageDTO(profanityRequestDTO.getMessage());
