@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public interface AuthClient {
     @PostMapping
-    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestDTO request);
+    public AuthResponseDTO authenticate(@RequestBody AuthRequestDTO request);
 }
